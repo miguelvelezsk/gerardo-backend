@@ -33,7 +33,7 @@ model Diet {
 
 model Meal {
   id              String  @id @default(cuid())
-  time            DateTime
+  time            String
   protein         Float
   sugar           Float
   fat             Float
