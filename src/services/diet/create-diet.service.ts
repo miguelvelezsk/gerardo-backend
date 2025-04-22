@@ -1,11 +1,11 @@
 import { prisma } from '../../prisma/client';
 
 interface assignDietData {
-  patientId?: string;
-  name: string;
-  description: string;
-  startDate: Date;
-  endDate: Date;
+	patientId?: string;
+	name: string;
+	description: string;
+	startDate: Date;
+	endDate: Date;
 }
 
 export const createDietService = async (data: assignDietData) => {

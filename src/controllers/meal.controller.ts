@@ -15,7 +15,7 @@ export const createMeal = async (req: Request, res: Response) => {
 export const assignMeal = async (req: Request, res: Response) => {
   try {
     const updatedMeal = await assignMealData(req.body);
-    res.status(201).json(updatedMeal);
+    res.status(200).json(updatedMeal);
   } catch (error) {
     console.error("Error al asignar la comida:", error);
     res.status(500).json({ error: "Error al asignar la comida" });
