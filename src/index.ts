@@ -9,7 +9,7 @@ app.use(express.json());
 
 // routes
 app.use("/diets", dietRoutes);
-app.use("/meals", mealRoutes)
+app.use("/meals", mealRoutes);
 
 const PORT = 4000;
 app.listen(PORT, () => {

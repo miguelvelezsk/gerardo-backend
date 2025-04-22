@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { assignDiet } from "../controllers/diet.controller";
+import { createDiet, assignDiet } from "../controllers/diet.controller";
 
 const router = Router();
 
-router.post("/assign", assignDiet);
+router.post("/", createDiet);
+router.put("/assign", assignDiet);
 
 export default router;

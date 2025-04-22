@@ -24,21 +24,30 @@ model Patient {
 
 model Diet {
   id              String   @id @default(cuid())
-  patientId       String
+  name            String
+  description     String
   startDate       DateTime
   endDate         DateTime
-  patient         Patient  @relation(fields: [patientId], references: [id])
+  patients        Patient[]
   meals           Meal[]
 }
 
 model Meal {
   id              String  @id @default(cuid())
-  time            String
+  name            String
+  type            MeatType
   protein         Float
   sugar           Float
   fat             Float
   taken           Boolean @default(false)
 
   diets           Diet[]
+}
+
+enum MeatType {
+  DESAYUNO
+  ALMUERZO
+  CENA
+  MERIENDA
 }
 
