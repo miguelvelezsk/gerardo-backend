@@ -2,9 +2,9 @@ import { MeatType } from '@prisma/client';
 import { prisma } from '../../prisma/client';
 
 interface createAndAssignMealData {
+  dietId?: string;
   name: string;
   type: MeatType;
-  dietId?: string;
   protein: number;
   sugar: number;
   fat:number;
