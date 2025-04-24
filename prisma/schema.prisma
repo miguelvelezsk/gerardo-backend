@@ -14,10 +14,10 @@ datasource db {
 }
 
 model Patient {
-  id               String   @id @default(cuid())
+  id               String   @id
   name             String
   age              Int
-  medicalHistory   String
+  medicalHistory   String   @default("")
   eatingHabits     String
   diets            Diet[]
 }

@@ -11,7 +11,7 @@ export const assignDietData = async(data: assignDietData) => {
     });
 
     if(!patientExists) {
-        throw Error("El paciente no existe")
+        throw Error("El paciente no existe");
     }
 
     const dietExists = await prisma.diet.findUnique({
@@ -19,7 +19,7 @@ export const assignDietData = async(data: assignDietData) => {
     });
 
     if(!dietExists) {
-        throw Error("La dieta no existe")
+        throw Error("La dieta no existe");
     }
 
     const updatedDiet = await prisma.diet.update({

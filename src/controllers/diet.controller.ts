@@ -2,8 +2,8 @@ import { Request, Response } from "express";
 import { createDietService } from "../services/diet/create-diet.service";
 import { assignDietData } from "../services/diet/assign-diet.service";
 import { deleteDietData } from "../services/diet/delete-diet.service";
-import { getDietsService } from "../services/diet/get-diet-service";
-import { updateDietData } from "../services/diet/updated-diet-service";
+import { getDietsService } from "../services/diet/get-diet.service";
+import { updateDietData } from "../services/diet/updated-diet.service";
 
 export const createDiet = async (req: Request, res: Response) => {
   try {
