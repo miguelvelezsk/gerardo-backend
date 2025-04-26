@@ -8,7 +8,6 @@ interface createAndAssignMealData {
   protein: number;
   sugar: number;
   fat:number;
-  taken?:boolean;
 }
 
 export const createMealService = async (data: createAndAssignMealData) => {
@@ -40,7 +39,6 @@ export const createMealService = async (data: createAndAssignMealData) => {
       protein: data.protein,
       sugar: data.sugar,
       fat: data.fat,
-      taken: data.taken ?? false,
       ...(dietToConnect || {})
     },
   });

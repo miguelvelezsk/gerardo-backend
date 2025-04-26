@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 import { createPatientService } from '../services/patient/create-patient.service';
-import { assignPatientData } from '../services/patient/assign-patient.service';
+import { assignDietToPatientData } from '../services/patient/assign-diet-to-patient.service';
 import { getPatientsService } from '../services/patient/get-patient.service';
 import { updatePatientData } from '../services/patient/updated-patient.service';
 import { deletePatientService } from '../services/patient/delete-patient.service';
@@ -15,9 +15,9 @@ export const createPatient = async (req: Request, res: Response) => {
     }
 };
 
-export const assignPatient = async (req: Request, res: Response) => {
+export const assignDietToPatient = async (req: Request, res: Response) => {
     try {
-        const updatedPatient = await assignPatientData(req.body);
+        const updatedPatient = await assignDietToPatientData(req.body);
         res.status(200).json(updatedPatient);
     } catch (error) {
         console.error("Error al asignar la dieta", error);
@@ -26,7 +26,7 @@ export const assignPatient = async (req: Request, res: Response) => {
 };
 
 export const getPatients = async (req: Request, res: Response) => {
-    const{id, name, dietId, eatingHabits, age} = req.query;
+    const{id, name, dietId, eatingHabits, medicalHistory, age} = req.query;
 
     try {
         const patients = await getPatientsService({
@@ -34,6 +34,7 @@ export const getPatients = async (req: Request, res: Response) => {
             name: name as string,
             dietId: dietId as string,
             eatingHabits: eatingHabits as string,
+            medicalHistory: medicalHistory as string,
             age: parseInt(age as string),
         })
 

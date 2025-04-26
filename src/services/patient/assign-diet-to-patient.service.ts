@@ -5,7 +5,7 @@ interface assignPatientDiet{
     dietId: string;
 }
 
-export const assignPatientData = async(data: assignPatientDiet) => {
+export const assignDietToPatientData = async(data: assignPatientDiet) => {
     const dietExists = await prisma.diet.findUnique({
         where: {id: data.dietId},
     });
@@ -25,12 +25,13 @@ export const assignPatientData = async(data: assignPatientDiet) => {
     const updatedPatient = await prisma.patient.update({
         where: {id: data.patientId},
         data: {
-            diets: {
+            diet: {
                 connect: {
                     id: data.dietId,
                 },
             },
         },
+        include: {diet: true},
     });
 
     return updatedPatient; 

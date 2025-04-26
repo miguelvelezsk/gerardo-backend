@@ -1,7 +1,7 @@
 import { prisma } from '../../prisma/client';
 
 interface createPatientData {
-  id: string;
+  	id: string;
 	name: string;
 	age: number;
 	medicalHistory?: string;
@@ -23,7 +23,7 @@ export const createPatientService = async (data: createPatientData) => {
 		}
 
 		dietToConnect = {
-			diets: {
+			diet: {
 				connect: {
 					id: data.dietId,
 				},
@@ -38,10 +38,10 @@ export const createPatientService = async (data: createPatientData) => {
 		age: data.age,
 		medicalHistory: data.medicalHistory || "",
 		eatingHabits: data.eatingHabits,
-		...(dietToConnect || {}),
+		...(dietToConnect ?? {}),
 	},
 	include: {
-	  diets: true,
+	  diet: true,
 	}
   });
 

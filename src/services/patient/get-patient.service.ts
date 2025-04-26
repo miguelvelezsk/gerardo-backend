@@ -5,6 +5,7 @@ export const getPatientsService = async (filters: {
     name?: string,
     dietId?: string,
     eatingHabits?: string,
+    medicalHistory?: string,
     age?: number,
 }) => {
     const patients = await prisma.patient.findMany({
@@ -12,6 +13,7 @@ export const getPatientsService = async (filters: {
             ...(filters.id && {id: filters.id}),
             ...(filters.name && {name: {contains: filters.name, mode: 'insensitive'}}),
             ...(filters.eatingHabits && {eatingHabits: {contains: filters.eatingHabits, mode: 'insensitive'}}),
+            ...(filters.medicalHistory && {medicalHistory: {contains: filters.medicalHistory, mode: 'insensitive'}}),
             ...(filters.age && {age: filters.age}),
             ...(filters.dietId && {
                 diets: {
@@ -19,6 +21,7 @@ export const getPatientsService = async (filters: {
                 }
             }),
         },
+        include: {diet: true},
     });
 
     return patients;
