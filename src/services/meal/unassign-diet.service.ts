@@ -1,11 +1,11 @@
 import {prisma} from '../../prisma/client'
 
-interface assignMealData{
+interface unAssignMealData{
     mealId: string;
-    dietId?: string;
+    dietId: string;
 }
 
-export const assignMealData = async(data: assignMealData) => {
+export const unAssignMealData = async(data: unAssignMealData) => {
     
     const dietExist = await prisma.diet.findUnique({
         where: {id: data.dietId},
@@ -27,7 +27,7 @@ export const assignMealData = async(data: assignMealData) => {
         where: {id: data.mealId},
         data: {
             diets: {
-                connect: {id: data.dietId},
+                disconnect: {id: data.dietId},
             },
         },
         include: {diets: true}

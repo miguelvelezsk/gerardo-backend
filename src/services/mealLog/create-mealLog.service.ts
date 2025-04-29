@@ -1,7 +1,7 @@
 import { prisma } from "../../prisma/client";
 
 interface createMealLogData {
-    patiendId: string;
+    patientId: string;
     mealId: string;
     date?: Date;
 }
@@ -9,24 +9,24 @@ interface createMealLogData {
 export const createMealLogService = async (data: createMealLogData) => {
 
     try {
-        const patientExists = await prisma.patient.findUniqueOrThrow({
-            where: {id: data.patiendId},  
+        await prisma.patient.findUniqueOrThrow({
+            where: {id: data.patientId},  
         });
     } catch (err) {
-        console.error("Paciente no encontrado");
+        throw new Error("Paciente no encontrado");
     }
 
     try {
-        const mealExists = await prisma.meal.findUniqueOrThrow({
+        await prisma.meal.findUniqueOrThrow({
             where: {id: data.mealId},
         });
     } catch(err) {
-        console.error("No existe la comida")
+        throw new Error("No existe la comida")
     }
 
     const newMealLog = await prisma.mealLog.create({
         data: {
-            patientId: data.patiendId,
+            patientId: data.patientId,
             mealId: data.mealId,
             date: data.date ?? new Date(),
         },
