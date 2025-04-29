@@ -1,47 +1,19 @@
 import { prisma } from '../../prisma/client';
 
-interface assignDietData {
-	patientId?: string;
+interface createDietData {
 	name: string;
 	description: string;
-	startDate: Date;
-	endDate: Date;
+  observations?: string;
 }
 
-export const createDietService = async (data: assignDietData) => {
-
-  let patientToConnect = undefined;
-
-  if(data.patientId) {
-    const patientExists = await prisma.patient.findUnique({
-      where: {id: data.patientId}
-    });
-
-    if(!patientExists){
-      throw new Error("El paciente no existe")
-    }
-
-    patientToConnect = {
-      patients: {
-        connect: {
-          id: data.patientId
-        },
-      },
-    };
-  }
+export const createDietService = async (data: createDietData) => {
 
   const newDiet = await prisma.diet.create({
     data: {
       name: data.name,
       description: data.description,
-      startDate: new Date(data.startDate),
-      endDate: new Date(data.endDate),
-      ...(patientToConnect || {})
+      observations: data.observations || "",
     },
-    include: {
-      patients: true,
-      meals: true,
-    }
   });
 
   return newDiet;

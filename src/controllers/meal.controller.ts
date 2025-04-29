@@ -4,6 +4,7 @@ import { assignMealData } from "../services/meal/assign-meal.service";
 import { deleteMealData } from "../services/meal/delete-meal.service";
 import { getMealsService } from "../services/meal/get-meal.service";
 import { updateMealService } from "../services/meal/update-meal.service";
+import { unAssignMealData } from "../services/meal/unassign-diet.service";
 
 export const createMeal = async (req: Request, res: Response) => {
   try {
@@ -22,6 +23,16 @@ export const assignMeal = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error al asignar la comida:", error);
     res.status(500).json({ error: "Error al asignar la comida" });
+  }
+};
+
+export const unAssignMeal = async (req: Request, res: Response) => {
+  try {
+    const updatedMeal = await unAssignMealData(req.body);
+    res.status(200).json(updatedMeal);
+  } catch (error) {
+    console.error("Error al desasignar la comida:", error);
+    res.status(500).json({ error: "Error al desasignar la comida" });
   }
 };
 
