@@ -14,40 +14,55 @@ datasource db {
 }
 
 model Patient {
-  id               String   @id @default(cuid())
-  name             String
-  age              Int
-  medicalHistory   String
-  eatingHabits     String
-  diets            Diet[]
+  id             String @id
+  name           String
+  age            Int
+  medicalHistory String @default("")
+  eatingHabits   String
+
+  dietId String?
+  diet   Diet?   @relation(fields: [dietId], references: [id])
+
+  mealLogs MealLog[]
 }
 
 model Diet {
-  id              String   @id @default(cuid())
-  name            String
-  description     String
-  startDate       DateTime
-  endDate         DateTime
-  patients        Patient[]
-  meals           Meal[]
+  id           String    @id @default(cuid())
+  name         String
+  description  String
+  observations String    @default("")
+  patients     Patient[]
+  meals        Meal[]
 }
 
 model Meal {
-  id              String  @id @default(cuid())
-  name            String
-  type            MeatType
-  protein         Float
-  sugar           Float
-  fat             Float
-  taken           Boolean @default(false)
+  id       String    @id @default(cuid())
+  name     String
+  type     MeatType
+  protein  Float
+  sugar    Float
+  fat      Float
+  diets    Diet[]
+  mealLogs MealLog[]
+}
 
-  diets           Diet[]
+model MealLog {
+  patient   Patient @relation(fields: [patientId], references: [id])
+  patientId String
+
+  meal   Meal   @relation(fields: [mealId], references: [id])
+  mealId String
+
+  date DateTime @default(now())
+
+  @@id([patientId, mealId, date])
 }
 
 enum MeatType {
   DESAYUNO
+  MEDIAMAÑANA
   ALMUERZO
-  CENA
+  MEDIATARDE
   MERIENDA
+  CENA
 }
-
