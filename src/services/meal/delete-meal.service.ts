@@ -10,10 +10,10 @@ export const deleteMealData = async(mealId: string) => {
         throw Error("La comida no existe")
     }
 
-    const deleteMeal = await prisma.meal.delete({
+    const deletedMeal = await prisma.meal.delete({
         where: {id: mealId},
     });
 
-    return deleteMeal;
+    return deletedMeal;
 
 }

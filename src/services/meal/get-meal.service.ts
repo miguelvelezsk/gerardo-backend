@@ -21,4 +21,4 @@ export const getMealsService = async (filters: {
     });
 
     return meals;
-}
+};

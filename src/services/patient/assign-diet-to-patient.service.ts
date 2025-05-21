@@ -7,7 +7,7 @@ interface assignPatientDiet{
 
 export const assignDietToPatientData = async(data: assignPatientDiet) => {
 
-    if(data.dietId) {
+    if(data.dietId){
         const dietExists = await prisma.diet.findUnique({
             where: {id: data.dietId},
         });

@@ -3,7 +3,8 @@ import cors from "cors";
 import patientRoutes from "./routes/patient.routes"
 import dietRoutes from "./routes/diet.routes";
 import mealRoutes from "./routes/meal.routes"
-import mealLogRouter from "./routes/mealLog.routes"
+import mealLogRoutes from "./routes/mealLog.routes"
+import alarmRoutes from "./routes/alarm.routes"
 
 const app = express();
 app.use(cors());
@@ -13,7 +14,8 @@ app.use(express.json());
 app.use("/patients", patientRoutes);
 app.use("/diets", dietRoutes);
 app.use("/meals", mealRoutes);
-app.use("/mealLogs", mealLogRouter);
+app.use("/mealLogs", mealLogRoutes);
+app.use("/alarms", alarmRoutes);
 
 
 const PORT = 4000;

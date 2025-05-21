@@ -24,6 +24,7 @@ model Patient {
   diet             Diet?    @relation(fields: [dietId], references: [id])
 
   mealLogs        MealLog[]
+  alarms          Alarm[]
 }
 
 model Diet {
@@ -60,6 +61,19 @@ model MealLog {
   @@id([patientId, mealId, date])
 }
 
+model Alarm {
+  id              String    @id @default(cuid())
+  patient     Patient  @relation(fields: [patientId], references: [id])
+  patientId   String
+
+  name        String   
+  type        AlarmType
+  time        String   
+  daysOfWeek  Int[]   
+  lastTriggered  DateTime? 
+  notes       String? 
+}
+
 enum MeatType {
   DESAYUNO
   MEDIAMAÑANA
@@ -69,3 +83,7 @@ enum MeatType {
   CENA
 }
 
+enum AlarmType {
+  MEDICAMENTO
+  SUPLEMENTO
+}
