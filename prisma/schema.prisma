@@ -47,14 +47,14 @@ model Meal {
   id              String    @id @default(cuid())
   name            String
   type            MeatType
-  energy          Float
-  protein         Float
-  carbs           Float
-  sugar           Float
-  fat             Float
+  energy          Float?
+  protein         Float?
+  carbs           Float?
+  sugar           Float?
+  fat             Float?
   fiber           Float?
   sodium          Float?
-  foodGroup       FoodGroup
+  foodGroup       FoodGroup?
   foodSubgroup    String?
 
   diets           Diet[]
