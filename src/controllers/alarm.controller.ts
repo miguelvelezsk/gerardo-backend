@@ -4,6 +4,7 @@ import { listAlarmsByPatientService } from "../services/alarm/list-alarms-by-pat
 import { updateAlarmService } from "../services/alarm/update-alarm.service";
 import { deleteAlarmService } from "../services/alarm/delete-alarm.service";
 import { deactivateAlarmService } from "../services/alarm/deactivate-alarm.service";
+import { searchAlarmsByPatientService } from "../services/alarm/search-alarm.service";
 
 export const createAlarm = async (req: Request, res:Response) => {
     try {
@@ -85,5 +86,21 @@ export const deleteAlarm = async (req: Request, res: Response) => {
         res.status(200).json(deletedAlarm);
     } catch(error) {
         res.status(500).json({ error: "Error al eliminar la alarma" });
+    }
+};
+
+export const searchAlarmByPatient = async (req: Request, res: Response) => {
+    try {
+        const { search } = req.query;
+
+        if (!search || typeof search !== "string") {
+            return res.status(400).json({ error: "El parámetro de búsqueda es requerido." });
+        }
+
+        const alarms = await searchAlarmsByPatientService(search);
+        res.status(200).json(alarms);
+    } catch(error) {
+        console.error("Error al buscar alarmas:", error);
+        res.status(500).json({ error: "Error al buscar alarmas" });
     }
 };

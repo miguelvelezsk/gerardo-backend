@@ -32,6 +32,13 @@ model Diet {
   name            String
   description     String
   observations    String   @default("")
+  dailyCalories   Int?
+  carbsPercentage Int?
+  proteinPercentage Int?
+  fatPercentage   Int?
+  sugarPercentage Int?
+  sodiumPercentage Int?
+
   patients        Patient[]
   meals           Meal[]
 }
@@ -40,9 +47,15 @@ model Meal {
   id              String    @id @default(cuid())
   name            String
   type            MeatType
+  energy          Float
   protein         Float
+  carbs           Float
   sugar           Float
-  fat             Float 
+  fat             Float
+  fiber           Float?
+  sodium          Float?
+  foodGroup       FoodGroup
+  foodSubgroup    String?
 
   diets           Diet[]
 
@@ -81,6 +94,17 @@ enum MeatType {
   MEDIATARDE
   MERIENDA
   CENA
+}
+
+enum FoodGroup {
+  CEREALES
+  FRUTAS
+  VERDURAS
+  LACTEOS
+  PROTEINAS_ANIMALES
+  PROTEINAS_VEGETALES
+  GRASAS_SALUDABLES
+  AZUCARES
 }
 
 enum AlarmType {
