@@ -55,7 +55,8 @@ model Meal {
   fiber           Float?
   sodium          Float?
   foodGroup       FoodGroup?
-  foodSubgroup    String?
+  tags            String?
+  ingredients     Json?
 
   diets           Diet[]
 
@@ -97,7 +98,7 @@ enum MeatType {
 }
 
 enum FoodGroup {
-  CEREALES
+  CARBOHIDRATOS
   FRUTAS
   VERDURAS
   LACTEOS

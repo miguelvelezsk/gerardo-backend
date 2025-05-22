@@ -5,14 +5,19 @@ import { updateAlarmService } from "../services/alarm/update-alarm.service";
 import { deleteAlarmService } from "../services/alarm/delete-alarm.service";
 import { deactivateAlarmService } from "../services/alarm/deactivate-alarm.service";
 import { searchAlarmsByPatientService } from "../services/alarm/search-alarm.service";
+import { HttpError } from "../utils/http-error";
 
 export const createAlarm = async (req: Request, res:Response) => {
     try {
         const newAlarm = await createAlarmService(req.body);
         res.status(201).json(newAlarm)
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error al crear la alarma", error);
-        res.status(500).json({ error: "Error al crear la alarma" });
+
+        const statusCode = error instanceof HttpError ? error.statusCode : 500;
+        const message = error.message || "Error interno del servidor"
+
+        res.status(statusCode).json({ error: message });
     }
 };
 
@@ -20,7 +25,7 @@ export const listAlarmsByPatient = async (req: Request, res: Response) => {
     const { patientId, todaysDay } = req.query;
 
     if(!patientId || typeof patientId !== 'string') {
-        return res.status(400).json({ error: "patientId es requerido" });
+        return res.status(400).json({ error: "El documento del paciente es requerido" });
     }
 
     try {
@@ -35,9 +40,12 @@ export const listAlarmsByPatient = async (req: Request, res: Response) => {
         }
 
         res.status(200).json(alarms)
-    } catch(error) {
+    } catch(error: any) {
         console.error("Error al obtener las alarmas:", error);
-        res.status(500).json({ error: "Error al obtener las alarmas" });
+        const statusCode = error instanceof HttpError ? error.statusCode : 500;
+        const message = error.message || "Error interno del servidor"
+
+        res.status(statusCode).json({ error: message });
     }
 };
 
@@ -51,9 +59,12 @@ export const listAlarmsForPush = async (req: Request, res: Response) => {
         });
 
         res.status(200).json(alarms);
-    } catch (error) {
-        console.error("Error al listar alarmas para notificación:", error);
-        res.status(500).json({ error: "Error al obtener alarmas para notificación" });
+    } catch(error: any) {
+        console.error("Error al obtener las alarmas:", error);
+        const statusCode = error instanceof HttpError ? error.statusCode : 500;
+        const message = error.message || "Error interno del servidor"
+
+        res.status(statusCode).json({ error: message });
     }
 };
 
@@ -61,9 +72,12 @@ export const updateAlarm = async (req: Request, res: Response) => {
     try {
         const updatedAlarm = await updateAlarmService(req.body);
         res.status(200).json(updatedAlarm);
-    } catch(error) {
-        console.error("Error al modificar la alarma:", error);
-        res.status(500).json({ error: "Error al modificar la alarma" });
+    } catch(error: any) {
+        console.error("Error al obtener las alarmas:", error);
+        const statusCode = error instanceof HttpError ? error.statusCode : 500;
+        const message = error.message || "Error interno del servidor"
+
+        res.status(statusCode).json({ error: message });
     }
 };
 
@@ -72,9 +86,12 @@ export const deactivateAlarm = async (req: Request, res: Response) => {
         const { alarmId } = req.body;
         const deactivatedAlarm = await deactivateAlarmService(alarmId);
         res.status(200).json(deactivatedAlarm);
-    } catch(error) {
-        console.error("Error al desactivar la alarma:", error);
-        res.status(500).json({ error: "Error al desactivar la alarma" });
+    } catch(error: any) {
+        console.error("Error al obtener las alarmas:", error);
+        const statusCode = error instanceof HttpError ? error.statusCode : 500;
+        const message = error.message || "Error interno del servidor"
+
+        res.status(statusCode).json({ error: message });
     }
 };
 
@@ -84,8 +101,12 @@ export const deleteAlarm = async (req: Request, res: Response) => {
     try {
         const deletedAlarm = await deleteAlarmService(id);
         res.status(200).json(deletedAlarm);
-    } catch(error) {
-        res.status(500).json({ error: "Error al eliminar la alarma" });
+    } catch(error: any) {
+        console.error("Error al obtener las alarmas:", error);
+        const statusCode = error instanceof HttpError ? error.statusCode : 500;
+        const message = error.message || "Error interno del servidor"
+
+        res.status(statusCode).json({ error: message });
     }
 };
 
@@ -94,13 +115,17 @@ export const searchAlarmByPatient = async (req: Request, res: Response) => {
         const { search } = req.query;
 
         if (!search || typeof search !== "string") {
-            return res.status(400).json({ error: "El parámetro de búsqueda es requerido." });
+            res.status(400).json({ error: "El parámetro de búsqueda es requerido." });
+            return
         }
 
         const alarms = await searchAlarmsByPatientService(search);
         res.status(200).json(alarms);
-    } catch(error) {
-        console.error("Error al buscar alarmas:", error);
-        res.status(500).json({ error: "Error al buscar alarmas" });
+    } catch(error: any) {
+        console.error("Error al obtener las alarmas:", error);
+        const statusCode = error instanceof HttpError ? error.statusCode : 500;
+        const message = error.message || "Error interno del servidor"
+
+        res.status(statusCode).json({ error: message });
     }
 };

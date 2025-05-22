@@ -1,4 +1,5 @@
 import { prisma } from "../../prisma/client";
+import { HttpError } from "../../utils/http-error";
 
 interface UpdateAlarmData {
     alarmId: string;
@@ -16,7 +17,7 @@ export const updateAlarmService = async (data: UpdateAlarmData) => {
     });
 
     if (!alarmExists) {
-        throw new Error("La alarma no existe");
+        throw new HttpError("Alarma no encontrada", 404);
     }
 
     const updatedAlarm = await prisma.alarm.update({

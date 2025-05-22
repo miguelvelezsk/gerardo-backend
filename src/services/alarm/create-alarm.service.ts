@@ -1,4 +1,5 @@
 import { prisma } from "../../prisma/client";
+import { HttpError } from "../../utils/http-error"
 
 interface CreateAlarmData {
     patientId: string;
@@ -17,7 +18,7 @@ export const createAlarmService = async (data: CreateAlarmData) => {
         });
 
         if(!patientExists) {
-            throw new Error("El paciente no existe")
+            throw new HttpError("Paciente no encontrado", 404);
         }
     }
 

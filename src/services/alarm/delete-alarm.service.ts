@@ -1,4 +1,5 @@
 import { prisma } from "../../prisma/client";
+import { HttpError } from "../../utils/http-error";
 
 export const deleteAlarmService = async(alarmId: string) => {
 
@@ -7,7 +8,7 @@ export const deleteAlarmService = async(alarmId: string) => {
     });
 
     if(!alarmExists) {
-        throw Error("La alarma no existe");
+        throw new HttpError("Alarma no encontrada", 404);
     }
 
     const deletedAlarm = await prisma.alarm.delete({
