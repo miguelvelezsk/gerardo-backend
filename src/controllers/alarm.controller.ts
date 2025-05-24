@@ -6,6 +6,7 @@ import { deleteAlarmService } from "../services/alarm/delete-alarm.service";
 import { deactivateAlarmService } from "../services/alarm/deactivate-alarm.service";
 import { searchAlarmsByPatientService } from "../services/alarm/search-alarm.service";
 import { HttpError } from "../utils/http-error";
+import { getAlarmService } from "../services/alarm/get-alarm.service";
 
 export const createAlarm = async (req: Request, res:Response) => {
     try {
@@ -65,6 +66,26 @@ export const listAlarmsForPush = async (req: Request, res: Response) => {
         const message = error.message || "Error interno del servidor"
 
         res.status(statusCode).json({ error: message });
+    }
+};
+
+export const getAlarm = async (req: Request, res: Response) => {
+    const { id, name, } = req.query;
+    
+    try {
+        const alarms = await getAlarmService({
+            id: id as string,
+            name: name as string,
+        });
+
+        if (alarms.length == 0) {
+            res.status(404).json({ message: "No se encontraron alarmas" });
+            return;
+        }
+
+        res.status(200).json(alarms);
+    } catch(error) {
+        res.status(500).json({ error: "Error al obtener las alarmas" });
     }
 };
 

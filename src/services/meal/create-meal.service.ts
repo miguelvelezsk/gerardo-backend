@@ -1,16 +1,26 @@
-import { MeatType } from '@prisma/client';
+import { MeatType, PortionSize, FoodGroup, Prisma } from '@prisma/client';
 import { prisma } from '../../prisma/client';
 
-interface createAndAssignMealData {
+type Ingredients = Prisma.JsonArray;
+
+interface CreateAndAssignMealData {
   dietId?: string;
   name: string;
   type: MeatType;
+  size: PortionSize;
   protein: number;
+  carbs: number;
+  calories: number;
   sugar: number;
-  fat:number;
+  fat: number;
+  fiber: number;
+  sodium: number;
+  foodGroup: FoodGroup;
+  tags?: string[];
+  ingredients?: Ingredients;
 }
 
-export const createMealService = async (data: createAndAssignMealData) => {
+export const createMealService = async (data: CreateAndAssignMealData) => {
 
   let dietToConnect = undefined;
 
@@ -36,10 +46,21 @@ export const createMealService = async (data: createAndAssignMealData) => {
     data: {
       name: data.name,
       type: data.type,
+      size: data.size,
       protein: data.protein,
+      carbs: data.carbs,
+      calories: data.calories,
       sugar: data.sugar,
       fat: data.fat,
-      ...(dietToConnect || {})
+      fiber: data.fiber,
+      sodium: data.sodium,
+      foodGroup: data.foodGroup,
+      tags: data.tags ?? [],
+      ingredients: data.ingredients ?? [],
+      ...(dietToConnect || {}),
+    },
+    include: {
+      diets: !!data.dietId,
     },
   });
 

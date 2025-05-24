@@ -1,9 +1,8 @@
 import { prisma } from "../../prisma/client";
 
-export const listAlarmsByPatientService = async ({patientId, todaysDay = false, lastTriggered}: {
+export const listAlarmsByPatientService = async ({patientId, todaysDay = false}: {
     patientId: string,
     todaysDay?: boolean,
-    lastTriggered?: Date,
 }) => {
 
     const today = new Date();

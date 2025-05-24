@@ -1,8 +1,9 @@
 import {prisma} from '../../prisma/client'
+import { handleDietAssignUnassign, handleDietUpdate } from '../../utils/handlers/diets-tags.handler';
 
 interface assignMealData{
     mealId: string;
-    dietId?: string;
+    dietId: string;
 }
 
 export const assignMealData = async(data: assignMealData) => {
@@ -32,6 +33,8 @@ export const assignMealData = async(data: assignMealData) => {
         },
         include: {diets: true}
     });
+
+    await handleDietAssignUnassign(data.dietId, prisma);
 
     return updatedMeal;
 

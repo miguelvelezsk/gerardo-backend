@@ -35,6 +35,7 @@ export const assignDietToPatientData = async(data: assignPatientDiet) => {
             : {disconnect: true},
         }),
         },
+        include: {diet: true}
     });
 
     return updatedPatient; 

@@ -1,14 +1,25 @@
 import {prisma} from '../../prisma/client';
-import { MeatType } from '@prisma/client';
+import { MeatType, PortionSize, FoodGroup, Prisma } from '@prisma/client';
+import { handleDietUpdate } from '../../utils/handlers/diets-tags.handler';
+
+type Ingredients = Prisma.JsonArray;
 
 interface UpdateMealData {
-    mealId: string;
-    name?: string;
-    type?: string;
-    protein?: number;
-    sugar?: number;
-    fat?: number;
-    }
+  mealId: string;  
+  name?: string;
+  type?: MeatType;
+  size?: PortionSize;
+  protein?: number;
+  carbs?: number;
+  calories?: number;
+  sugar?: number;
+  fat?: number;
+  fiber?: number;
+  sodium?: number;
+  foodGroup?: FoodGroup;
+  tags?: string[];
+  ingredients?: Ingredients;
+}
 
 
 export const updateMealService = async (data: UpdateMealData) => {
@@ -27,12 +38,21 @@ export const updateMealService = async (data: UpdateMealData) => {
         data: {
             name: data.name,
             type: data.type as MeatType,
+            size: data.size as PortionSize,
             protein: data.protein,
+            carbs: data.carbs,
+            calories: data.calories,
             sugar: data.sugar,
-            fat: data.fat, 
-            
+            fat: data.fat,
+            fiber: data.fiber,
+            sodium: data.sodium,
+            foodGroup: data.foodGroup as FoodGroup,
+            tags: data.tags,
+            ingredients: data.ingredients as Ingredients,
         },
     });
+
+    await handleDietUpdate(data.mealId, prisma);
 
     return updatedMeal;
 }
