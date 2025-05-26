@@ -13,18 +13,42 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Patient {
+model User {
   id               String   @id
   name             String
-  age              Int
+  email            String   @unique
+  password         String
+  birthDate        DateTime
+  role             Role
+  picture          String?
+
+  patientData      Patient? @relation("PatientUser")
+  patientsCare     Patient[] @relation("CaregiverPatients")
+
+  createdAt        DateTime @default(now()) 
+}
+
+model Patient {
+  id               String   @id
+  user             User     @relation("PatientUser", fields: [id], references: [id])
+  name             String
+  gender           String
+  weight           Float
+  height           Float
+
   medicalHistory   String   @default("")
-  eatingHabits     String
+  eatingHabits     String   @default("")
+
+  caregiver        User?    @relation("CaregiverPatients", fields: [caregiverId], references: [id])
+  caregiverId      String?
 
   dietId           String?
   diet             Diet?    @relation(fields: [dietId], references: [id])
 
   mealLogs        MealLog[]
   alarms          Alarm[]
+
+  createdAt       DateTime  @default(now())
 }
 
 model Diet {
@@ -78,10 +102,24 @@ model Alarm {
 
   name        String   
   type        AlarmType
-  time        String   
-  daysOfWeek  Int[]   
+  time        String
+  daysOfWeek  Int[]
+  logs        AlarmLog[]   
   lastTriggered  DateTime? 
   notes       String? 
+}
+
+model AlarmLog {
+  id          String    @id @default(cuid())
+  alarmId     String
+  alarm       Alarm     @relation(fields: [alarmId], references: [id])
+  takenAt     DateTime  @default(now())
+}
+
+enum Role {
+  PACIENTE
+  CUIDADOR
+  ESPECIALISTA
 }
 
 enum MeatType {

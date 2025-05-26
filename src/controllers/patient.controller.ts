@@ -1,19 +1,8 @@
 import {Request, Response} from 'express';
-import { createPatientService } from '../services/patient/create-patient.service';
 import { assignDietToPatientData } from '../services/patient/assign-diet-to-patient.service';
 import { getPatientsService } from '../services/patient/get-patient.service';
 import { updatePatientData } from '../services/patient/updated-patient.service';
 import { deletePatientService } from '../services/patient/delete-patient.service';
-
-export const createPatient = async (req: Request, res: Response) => {
-    try {
-        const newPatient = await createPatientService(req.body);
-        res.status(201).json(newPatient)
-    } catch (error) {
-        console.error("Error al crear el paciente", error);
-        res.status(500).json({ error: "Error al crear el paciente" });
-    }
-};
 
 export const assignDietToPatient = async (req: Request, res: Response) => {
     try {

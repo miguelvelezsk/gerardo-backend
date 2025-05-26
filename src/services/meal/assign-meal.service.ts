@@ -1,5 +1,5 @@
 import {prisma} from '../../prisma/client'
-import { handleDietAssignUnassign, handleDietUpdate } from '../../utils/handlers/diets-tags.handler';
+import { handleDietAssignUnassign } from '../../utils/handlers/diets-tags.handler';
 
 interface assignMealData{
     mealId: string;
