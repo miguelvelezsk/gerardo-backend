@@ -1,10 +1,10 @@
 import bcrypt from 'bcrypt'
 
-export const encryptPassword = async (password: string) => {
+export const encryptPassword = (password: string) => {
     return bcrypt.hash(password, 10)
 }
 
-export const calculateAge = async (birthDay: Date) => {
+export const calculateAge = (birthDay: Date) => {
 
   const today = new Date();
   let age = today.getFullYear() - birthDay.getFullYear();

@@ -33,6 +33,7 @@ model Patient {
   user             User     @relation("PatientUser", fields: [id], references: [id])
   name             String
   gender           String
+  age              Int?
   weight           Float
   height           Float
 

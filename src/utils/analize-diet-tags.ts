@@ -70,6 +70,6 @@ export async function analyzeDietTags(dietId: string): Promise<string[]> {
   ) {
     tags.push("Balanceada");
   }
-
+  
   return tags;
 }

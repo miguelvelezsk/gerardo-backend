@@ -24,7 +24,6 @@ export const getPatients = async (req: Request, res: Response) => {
             dietId: dietId as string,
             eatingHabits: eatingHabits as string,
             medicalHistory: medicalHistory as string,
-            age: parseInt(age as string),
         })
 
         if(patients.length == 0){

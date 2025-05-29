@@ -1,4 +1,5 @@
 import { prisma } from "../../prisma/client";
+import { calculateAge } from "../../utils/register-user-utils";
 
 export const getPatientsService = async (filters: {
     id?: string,
@@ -6,7 +7,6 @@ export const getPatientsService = async (filters: {
     dietId?: string,
     eatingHabits?: string,
     medicalHistory?: string,
-    age?: number,
 }) => {
     const patients = await prisma.patient.findMany({
         where: {
@@ -14,15 +14,26 @@ export const getPatientsService = async (filters: {
             ...(filters.name && {name: {contains: filters.name, mode: 'insensitive'}}),
             ...(filters.eatingHabits && {eatingHabits: {contains: filters.eatingHabits, mode: 'insensitive'}}),
             ...(filters.medicalHistory && {medicalHistory: {contains: filters.medicalHistory, mode: 'insensitive'}}),
-            ...(filters.age && {age: filters.age}),
             ...(filters.dietId && {
                 diets: {
                     some: {id: filters.dietId}
                 }
             }),
         },
-        include: {diet: true},
+        include: {
+            diet: true,
+            user: {
+                select: {
+                    birthDate: true,
+                },
+            },
+        },
     });
 
-    return patients;
+    const enrichedPatients = patients.map(patient => ({
+        ...patient,
+        age: patient.user?.birthDate ? calculateAge(patient.user.birthDate) : null,
+    }))
+
+    return enrichedPatients;
 }
