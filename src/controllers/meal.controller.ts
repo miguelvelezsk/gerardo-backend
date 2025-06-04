@@ -5,6 +5,7 @@ import { deleteMealData } from "../services/meal/delete-meal.service";
 import { getMealsService } from "../services/meal/get-meal.service";
 import { updateMealService } from "../services/meal/update-meal.service";
 import { unAssignMealData } from "../services/meal/unassign-diet.service";
+import { HttpError } from "../utils/http-error";
 
 export const createMeal = async (req: Request, res: Response) => {
   try {
@@ -20,9 +21,12 @@ export const assignMeal = async (req: Request, res: Response) => {
   try {
     const updatedMeal = await assignMealData(req.body);
     res.status(200).json(updatedMeal);
-  } catch (error) {
-    console.error("Error al asignar la comida:", error);
-    res.status(500).json({ error: "Error al asignar la comida" });
+  } catch(error: any) {
+      console.error("Error al asignar las comidas:", error);
+      const statusCode = error instanceof HttpError ? error.statusCode : 500;
+      const message = error.message || "Error interno del servidor"
+
+      res.status(statusCode).json({ error: message });
   }
 };
 
