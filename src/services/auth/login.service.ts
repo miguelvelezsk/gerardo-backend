@@ -11,7 +11,7 @@ export const loginUserService = async (email: string, password: string) => {
     if(!user) throw new HttpError("Fallo en las credenciales", 404);
 
     const isValidPassword = await compare(password, user.password);
-    if(!isValidPassword) throw new HttpError("Fallo en las credenciales", 404);
+    if(!isValidPassword) throw new HttpError("Fallo en las credenciales", 401);
 
     const payload = {
         id: user.id,
