@@ -7,6 +7,7 @@ import mealLogRoutes from "./routes/mealLog.routes"
 import alarmRoutes from "./routes/alarm.routes"
 import alarmLogRoutes from "./routes/alarmLog.routes";
 import userRoutes from "./routes/user.routes";
+import authRoutes from "./routes/auth.routes";
 
 const app = express();
 app.use(cors());
@@ -20,6 +21,7 @@ app.use("/mealLogs", mealLogRoutes);
 app.use("/alarms", alarmRoutes);
 app.use("/alarmLogs", alarmLogRoutes);
 app.use("/users", userRoutes);
+app.use("/auth", authRoutes);
 
 
 const PORT = 4000;
