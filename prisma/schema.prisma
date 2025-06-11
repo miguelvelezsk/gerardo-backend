@@ -21,6 +21,7 @@ model User {
   birthDate        DateTime
   role             Role
   picture          String?
+  picturePublicId  String?
 
   patientData      Patient? @relation("PatientUser")
   patientsCare     Patient[] @relation("CaregiverPatients")

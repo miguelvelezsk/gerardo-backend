@@ -1,7 +1,8 @@
 import { prisma } from "../../prisma/client";
 import { Role } from "@prisma/client";
 import { HttpError } from "../../utils/http-error";
-import { encryptPassword, calculateAge } from "../../utils/register-user-utils";
+import { encryptPassword } from "../../utils/register-user-utils";
+import cloudinary from "../../config/cloudinary.config";
 
 interface RegisterUserData {
     id: string;
@@ -9,7 +10,7 @@ interface RegisterUserData {
     email: string;
     password: string;
     role: Role;
-    picture?: string;
+    picture?: Express.Multer.File;
     birthDate: string;
     gender: string;
     weight: number;
@@ -35,6 +36,26 @@ export const registerUserService = async (data: RegisterUserData) => {
 
     const hashedPassword = await encryptPassword(data.password);
 
+    let imageUrl: string | undefined = undefined;
+    let imagePublicId: string | undefined = undefined;
+
+    if(data.picture) {
+        try {
+            const b64 = Buffer.from(data.picture.buffer).toString("base64");
+            const dataURI = `data:${data.picture.mimetype};base64,${b64}`;
+
+            const result = await cloudinary.uploader.upload(dataURI, {
+                folder: "profile_avatars",
+                public_id: `user_${data.id}_picture_${Date.now()}`
+            });
+            imageUrl = result.secure_url;
+            imagePublicId = result.public_id;
+        } catch (error) {
+            console.log('Error al subir la imagen a Cloudinary durante el registro:', error);
+            throw new HttpError("Error al subir la imagen de perfil durante el registro", 500);
+        }
+    }
+
     const user = await prisma.user.create({
         data: {
             id: data.id,
@@ -42,7 +63,8 @@ export const registerUserService = async (data: RegisterUserData) => {
             email: data.email,
             password: hashedPassword,
             role: data.role,
-            ...(data.picture && { picture: data.picture} ),
+            picture: imageUrl,
+            picturePublicId: imagePublicId,
             birthDate: new Date(data.birthDate),
         },
     });
