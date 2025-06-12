@@ -3,6 +3,7 @@ import { encryptPassword } from "../../utils/register-user-utils";
 import { HttpError } from "../../utils/http-error";
 import { config } from "../../config/auth.config";
 import { redis } from "../../config/redis.config";
+import { sendOtpEmail } from "../../utils/send-email";
 
 interface PendingSpecialistData {
     id: string;
@@ -48,8 +49,12 @@ export const registerSpecialistService = async (data: PendingSpecialistData) => 
         }),
         { ex: 300 }
     );
-
-    console.log(`Código de verificación para ${data.email}: ${otp}`);
+    
+    await sendOtpEmail({
+        email: data.email,
+        otp: otp,
+        name: data.name,
+    });
 
     await redis.set(`otp:${data.email}`, otp, {ex: 300});
 

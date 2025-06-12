@@ -4,6 +4,7 @@ import { registerSpecialistService } from "../services/user/register-specialist.
 import { HttpError } from "../utils/http-error";
 import { getUserService } from "../services/user/get-user.service";
 import { updateUserService } from "../services/user/updated-patient.service";
+import { verifySpecialistService } from "../services/user/verify-specialist.service";
 
 export const registerUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -75,6 +76,24 @@ export const registerSpecialist = async (req: Request, res: Response, next: Next
         res.status(statusCode).json({ error: message });
     }
 };
+
+export const verifySpecialist = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { email, otp } = req.body;
+        const picture = req.file;
+
+        const user = await verifySpecialistService({email, otp, picture});
+
+        res.status(201).json(user);
+    } catch(error: any) {
+        console.error("Error al verificar al especialista");
+
+        const statusCode = error instanceof HttpError ? error.statusCode : 500;
+        const message = error.message || "Error interno del servidor"
+        
+        res.status(statusCode).json({ error: message });
+    }
+}
 
 export const getUser = async (req: Request, res: Response) => {
     const {id} = req.params;
