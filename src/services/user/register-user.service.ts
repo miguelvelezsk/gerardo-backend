@@ -3,6 +3,7 @@ import { Role } from "@prisma/client";
 import { HttpError } from "../../utils/http-error";
 import { encryptPassword } from "../../utils/register-user-utils";
 import cloudinary from "../../config/cloudinary.config";
+import { config } from "../../config/auth.config";
 
 interface RegisterUserData {
     id: string;
@@ -36,7 +37,7 @@ export const registerUserService = async (data: RegisterUserData) => {
 
     const hashedPassword = await encryptPassword(data.password);
 
-    let imageUrl: string | undefined = undefined;
+    let imageUrl: string | undefined = config.defaultProfilePicture;
     let imagePublicId: string | undefined = undefined;
 
     if(data.picture) {
