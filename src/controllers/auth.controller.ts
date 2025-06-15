@@ -1,7 +1,8 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { loginUserService } from "../services/auth/login.service";
 import { HttpError } from "../utils/http-error";
 import { refreshAccessTokenService } from "../services/auth/refresh-token.service";
+import { verifyAccessToken } from "../utils/jwt.utils";
 
 export const loginUser = async (req: Request, res: Response) => {
     const { email, password } = req.body;

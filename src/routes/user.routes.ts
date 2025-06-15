@@ -7,7 +7,7 @@ const router = Router();
 router.post("/register", uploadedAvatar, registerUser);
 router.post("/register/specialist", uploadedAvatar, registerSpecialist);
 router.post("/verify-specialist", uploadedAvatar, verifySpecialist);
-router.get("/:id", getUser);
+router.get("/", getUser);
 router.put("/", uploadedAvatar, updateUser)
 
 export default router;

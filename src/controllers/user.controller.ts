@@ -96,10 +96,10 @@ export const verifySpecialist = async (req: Request, res: Response, next: NextFu
 }
 
 export const getUser = async (req: Request, res: Response) => {
-    const {id} = req.params;
+    const {id} = req.query;
 
     try {
-        const user = await getUserService(id);
+        const user = await getUserService(id as string | undefined);
         res.status(200).json(user);
     } catch (error: any) {
         console.error("Error al obtener al usuario", error);

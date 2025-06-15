@@ -19,7 +19,7 @@ export const generateRefreshToken = (payload: UserPayload): string => {
     });
 };
 
-export const verifyAccessToken = (token: string): UserPayload | null => {
+export const verifyAccessToken = (token: string): UserPayload => {
   try {
     const decoded = jwt.verify(token, config.jwtSecret) as UserPayload;
     return decoded;
