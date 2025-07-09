@@ -4,6 +4,7 @@ import { calculateAge } from "../../utils/register-user-utils";
 export const getPatientsService = async (filters: {
     id?: string,
     name?: string,
+    caregiver?: string,
     dietId?: string,
     eatingHabits?: string,
     medicalHistory?: string,
@@ -14,6 +15,7 @@ export const getPatientsService = async (filters: {
             ...(filters.name && {name: {contains: filters.name, mode: 'insensitive'}}),
             ...(filters.eatingHabits && {eatingHabits: {contains: filters.eatingHabits, mode: 'insensitive'}}),
             ...(filters.medicalHistory && {medicalHistory: {contains: filters.medicalHistory, mode: 'insensitive'}}),
+            ...(filters.caregiver && {caregiverId: filters.caregiver}),
             ...(filters.dietId && {
                 diets: {
                     some: {id: filters.dietId}

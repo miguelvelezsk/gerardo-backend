@@ -15,7 +15,7 @@ export const assignDietToPatient = async (req: Request, res: Response) => {
 };
 
 export const getPatients = async (req: Request, res: Response) => {
-    const{id, name, dietId, eatingHabits, medicalHistory, age} = req.query;
+    const{id, name, dietId, eatingHabits, medicalHistory, caregiver} = req.query;
 
     try {
         const patients = await getPatientsService({
@@ -23,6 +23,7 @@ export const getPatients = async (req: Request, res: Response) => {
             name: name as string,
             dietId: dietId as string,
             eatingHabits: eatingHabits as string,
+            caregiver: caregiver as string,
             medicalHistory: medicalHistory as string,
         })
 

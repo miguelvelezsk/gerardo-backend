@@ -41,6 +41,7 @@ export const registerSpecialistService = async (data: PendingSpecialistData) => 
 
     const hashedPassword = await encryptPassword(data.password);
 
+    
     await redis.set(
         `pending-specialist:${data.email}`,
         JSON.stringify({
