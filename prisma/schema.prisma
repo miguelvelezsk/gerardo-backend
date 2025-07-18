@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,58 +8,107 @@ datasource db {
 }
 
 model User {
-  id               String   @id
-  name             String
-  email            String   @unique
-  password         String
-  birthDate        DateTime
-  role             Role
-  picture          String?
-  picturePublicId  String?
-
-  patientData      Patient? @relation("PatientUser")
-  patientsCare     Patient[] @relation("CaregiverPatients")
-
+  id                        String             @id
+  name                      String
+  email                     String             @unique
+  password                  String
+  role                      Role
+  picture                   String?
+  createdAt                 DateTime           @default(now())
+  birthDate                 DateTime
+  picturePublicId           String?
   caregiverRequestsSent     CaregiverRequest[] @relation("CaregiverRequests")
   caregiverRequestsReceived CaregiverRequest[] @relation("PatientRequests")
-
-  createdAt        DateTime @default(now()) 
+  patientsCare              Patient[]          @relation("CaregiverPatients")
+  patientData               Patient?           @relation("PatientUser")
 }
 
 model Patient {
-  id               String   @id
-  user             User     @relation("PatientUser", fields: [id], references: [id])
-  name             String
-  gender           String
-  age              Int?
-  weight           Float
-  height           Float
-
-  medicalHistory   String   @default("")
-  eatingHabits     String   @default("")
-
-  caregiver        User?    @relation("CaregiverPatients", fields: [caregiverId], references: [id])
-  caregiverId      String?
-
-  dietId           String?
-  diet             Diet?    @relation(fields: [dietId], references: [id])
-
-  mealLogs        MealLog[]
-  alarms          Alarm[]
-
-  createdAt       DateTime  @default(now())
+  id             String    @id
+  name           String
+  medicalHistory String    @default("")
+  eatingHabits   String    @default("")
+  dietId         String?
+  caregiverId    String?
+  createdAt      DateTime  @default(now())
+  gender         String
+  height         Float
+  weight         Float
+  age            Int?
+  alarms         Alarm[]
+  mealLogs       MealLog[]
+  caregiver      User?     @relation("CaregiverPatients", fields: [caregiverId], references: [id])
+  diet           Diet?     @relation(fields: [dietId], references: [id])
+  user           User      @relation("PatientUser", fields: [id], references: [id])
 }
 
 model CaregiverRequest {
-  id              String    @id @default(cuid())
-  caregiver       User      @relation("CaregiverRequests" ,fields: [caregiverId], references: [id])
-  caregiverId     String
+  id          String        @id @default(cuid())
+  caregiverId String
+  patientId   String
+  status      RequestStatus @default(PENDING)
+  createdAt   DateTime      @default(now())
+  caregiver   User          @relation("CaregiverRequests", fields: [caregiverId], references: [id])
+  patient     User          @relation("PatientRequests", fields: [patientId], references: [id])
+}
 
-  patient         User      @relation("PatientRequests", fields: [patientId], references: [id])
-  patientId       String
+model Diet {
+  id           String    @id @default(cuid())
+  description  String
+  name         String
+  observations String    @default("")
+  tags         String[]  @default([])
+  patients     Patient[]
+  meals        Meal[]    @relation("DietToMeal")
+}
 
-  status          RequestStatus   @default(PENDING)
-  createdAt       DateTime        @default(now())
+model Meal {
+  id          String      @id @default(cuid())
+  fat         Float
+  protein     Float
+  sugar       Float
+  name        String
+  type        MeatType
+  carbs       Float
+  fiber       Float
+  foodGroup   FoodGroup
+  sodium      Float
+  ingredients Json?
+  size        PortionSize
+  calories    Float
+  tags        String[]
+  mealLogs    MealLog[]
+  diets       Diet[]      @relation("DietToMeal")
+}
+
+model MealLog {
+  patientId String
+  mealId    String
+  date      DateTime @default(now())
+  meal      Meal     @relation(fields: [mealId], references: [id])
+  patient   Patient  @relation(fields: [patientId], references: [id])
+
+  @@id([patientId, mealId, date])
+}
+
+model Alarm {
+  id            String     @id @default(cuid())
+  patientId     String
+  name          String
+  type          AlarmType
+  time          String
+  daysOfWeek    Int[]
+  notes         String?
+  lastTriggered DateTime?
+  patient       Patient    @relation(fields: [patientId], references: [id])
+  logs          AlarmLog[]
+}
+
+model AlarmLog {
+  id      String   @id @default(cuid())
+  alarmId String
+  takenAt DateTime @default(now())
+  alarm   Alarm    @relation(fields: [alarmId], references: [id])
 }
 
 enum RequestStatus {
@@ -73,71 +116,6 @@ enum RequestStatus {
   ACCEPTED
   REJECTED
   ENDED
-}
-
-model Diet {
-  id              String   @id @default(cuid())
-  name            String
-  description     String
-  observations    String   @default("")
-  
-  tags            String[] @default([])
-  patients        Patient[]
-  meals           Meal[]
-}
-
-model Meal {
-  id              String    @id @default(cuid())
-  name            String
-  type            MeatType
-  size            PortionSize
-  protein         Float
-  carbs           Float
-  calories        Float
-  sugar           Float
-  fat             Float
-  fiber           Float
-  sodium          Float
-  foodGroup       FoodGroup
-  tags            String[]
-  ingredients     Json?
-
-  diets           Diet[]
-
-  mealLogs        MealLog[]
-}
-
-model MealLog {
-  patient         Patient   @relation(fields: [patientId], references: [id])
-  patientId       String
-
-  meal            Meal      @relation(fields: [mealId], references: [id])
-  mealId          String    
-
-  date            DateTime  @default(now())
-
-  @@id([patientId, mealId, date])
-}
-
-model Alarm {
-  id              String    @id @default(cuid())
-  patient     Patient  @relation(fields: [patientId], references: [id])
-  patientId   String
-
-  name        String   
-  type        AlarmType
-  time        String
-  daysOfWeek  Int[]
-  logs        AlarmLog[]   
-  lastTriggered  DateTime? 
-  notes       String? 
-}
-
-model AlarmLog {
-  id          String    @id @default(cuid())
-  alarmId     String
-  alarm       Alarm     @relation(fields: [alarmId], references: [id])
-  takenAt     DateTime  @default(now())
 }
 
 enum Role {
@@ -148,11 +126,11 @@ enum Role {
 
 enum MeatType {
   DESAYUNO
-  MEDIAMAÑANA
   ALMUERZO
-  MEDIATARDE
-  MERIENDA
   CENA
+  MERIENDA
+  MEDIAMANANA @map("MEDIAMAÑANA")
+  MEDIATARDE
 }
 
 enum FoodGroup {
@@ -167,7 +145,7 @@ enum FoodGroup {
 }
 
 enum PortionSize {
-  PEQUEÑA
+  PEQUENA @map("PEQUEÑA")
   MEDIANA
   GRANDE
 }
