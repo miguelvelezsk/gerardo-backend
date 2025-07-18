@@ -25,6 +25,9 @@ app.use("/users", userRoutes);
 app.use("/auth", authRoutes);
 app.use("/request", requestRouters);
 
+app.get("/", (req, res) => {
+  res.send("API de Gerardo funcionando 🚀");
+});
 
 const PORT = 4000;
 app.listen(PORT, () => {
