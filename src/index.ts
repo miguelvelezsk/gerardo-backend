@@ -27,10 +27,10 @@ app.use("/auth", authRoutes);
 app.use("/request", requestRouters);
 
 
-app.get("/ping-db", async (req, res) => {
+app.get("/", async (req, res) => {
   try {
-    await prisma.$queryRaw`SELECT 1`;  // simple ping
-    res.send("✅ DB conectado correctamente");
+    const users = await prisma.user.findMany({ take: 5 });
+    res.json(users);
   } catch (error) {
     if (error instanceof Error) {
       res.status(500).json({ error: error.message });
