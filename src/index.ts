@@ -9,6 +9,7 @@ import alarmLogRoutes from "./routes/alarmLog.routes";
 import userRoutes from "./routes/user.routes";
 import authRoutes from "./routes/auth.routes";
 import requestRouters from "./routes/request.routes";
+import { prisma } from "./prisma/client";
 
 const app = express();
 app.use(cors());
@@ -25,11 +26,21 @@ app.use("/users", userRoutes);
 app.use("/auth", authRoutes);
 app.use("/request", requestRouters);
 
-app.get("/", (req, res) => {
-  res.send("API de Gerardo funcionando 🚀");
+
+app.get("/", async (req, res) => {
+  try {
+    const users = await prisma.user.findMany({ take: 5 });
+    res.json(users);
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(500).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: "Unknown error" });
+    }
+  }
 });
 
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log("Servidor corriendo en el puerto:", PORT);
 });
