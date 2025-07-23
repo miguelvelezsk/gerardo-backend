@@ -3,6 +3,7 @@ import { assignDietToPatientData } from '../services/patient/assign-diet-to-pati
 import { getPatientsService } from '../services/patient/get-patient.service';
 import { updatePatientData } from '../services/patient/updated-patient.service';
 import { deletePatientService } from '../services/patient/delete-patient.service';
+import { getPatientStatsService } from '../services/patient/get-stats.service';
 
 export const assignDietToPatient = async (req: Request, res: Response) => {
     try {
@@ -58,5 +59,19 @@ export const deletePatient = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error al eliminar el paciente:", error);
     res.status(500).json({ error: "Error al eliminar el paciente" });
+  }
+};
+
+export const getPatientStats = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    const stats = await getPatientStatsService(id);
+    res.status(200).json(stats);
+  } catch(error: any) {
+    console.error("Error al obtener las estadísticas del paciente: ", error);
+    res
+      .status(error.statusCode || 500)
+      .json({ error: error.message || "Error inesperado" });
   }
 };
